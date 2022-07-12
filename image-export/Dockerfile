@@ -1,4 +1,4 @@
-FROM node:18.3.0-slim
+FROM node:lts-slim
 
 LABEL maintainer="JGraph Ltd"
 
