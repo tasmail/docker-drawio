@@ -3,11 +3,11 @@
 
 LETS_ENCRYPT_ENABLED=${LETS_ENCRYPT_ENABLED:-false}
 PUBLIC_DNS=${PUBLIC_DNS:-'draw.example.com'}
-ORGANISATION_UNIT=${ORGANIZATION_UNIT:-'Cloud Native Application'}
+ORGANISATION_UNIT=${ORGANISATION_UNIT:-'Cloud Native Application'}
 ORGANISATION=${ORGANISATION:-'example inc'}
 CITY=${CITY:-'Paris'}
 STATE=${STATE:-'Paris'}
-COUNTRY_CODE=${COUNTRY:-'FR'}
+COUNTRY_CODE=${COUNTRY_CODE:-'FR'}
 KEYSTORE_PASS=${KEYSTORE_PASS:-'V3ry1nS3cur3P4ssw0rd'}
 KEY_PASS=${KEY_PASS:-$KEYSTORE_PASS}
 
@@ -16,7 +16,7 @@ echo "Init PreConfig.js"
 echo "(function() {" > $CATALINA_HOME/webapps/draw/js/PreConfig.js
 echo "  try {" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 echo "	    var s = document.createElement('meta');" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
-echo "	    s.setAttribute('content', '${DRAWIO_CSP_HEADER:-default-src \'self\'; script-src \'self\' https://storage.googleapis.com https://apis.google.com https://docs.google.com https://code.jquery.com \'unsafe-inline\'; connect-src \'self\' https://*.dropboxapi.com https://api.trello.com https://api.github.com https://raw.githubusercontent.com https://*.googleapis.com https://*.googleusercontent.com https://graph.microsoft.com https://*.1drv.com https://*.sharepoint.com https://gitlab.com https://*.google.com https://fonts.gstatic.com https://fonts.googleapis.com; img-src * data:; media-src * data:; font-src * about:; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com;}');" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+echo "	    s.setAttribute('content', '${DRAWIO_CSP_HEADER:-default-src \'self\'; script-src \'self\' https://storage.googleapis.com https://apis.google.com https://docs.google.com https://code.jquery.com \'unsafe-inline\'; connect-src \'self\' https://*.dropboxapi.com https://api.trello.com https://api.github.com https://raw.githubusercontent.com https://*.googleapis.com https://*.googleusercontent.com https://graph.microsoft.com https://*.1drv.com https://*.sharepoint.com https://gitlab.com https://*.google.com https://fonts.gstatic.com https://fonts.googleapis.com; img-src * data:; media-src * data:; font-src * about:; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; frame-src \'self\' https://*.google.com;}');" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 echo "	    s.setAttribute('http-equiv', 'Content-Security-Policy');" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 echo " 	    var t = document.getElementsByTagName('meta')[0];" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 echo "      t.parentNode.insertBefore(s, t);" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
@@ -31,7 +31,9 @@ fi
 echo "window.DRAWIO_BASE_URL = '${DRAWIO_BASE_URL:-http://localhost:8080}';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 #DRAWIO_VIEWER_URL is path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
 echo "window.DRAWIO_VIEWER_URL = '${DRAWIO_VIEWER_URL}';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
-echo "window.DRAW_MATH_URL = 'math';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+#DRAWIO_LIGHTBOX_URL Replace with your lightbox URL, eg. https://www.example.com
+echo "window.DRAWIO_LIGHTBOX_URL = '${DRAWIO_LIGHTBOX_URL}';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+echo "window.DRAW_MATH_URL = 'math/es5';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 #Custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
 echo "window.DRAWIO_CONFIG = ${DRAWIO_CONFIG:-null};" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 #Real-time configuration
@@ -79,6 +81,10 @@ else
     echo "window.DRAWIO_MSGRAPH_CLIENT_ID = '${DRAWIO_MSGRAPH_CLIENT_ID}'; " >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
     echo -n "${DRAWIO_MSGRAPH_CLIENT_ID}" > $CATALINA_HOME/webapps/draw/WEB-INF/msgraph_client_id
     echo -n "${DRAWIO_MSGRAPH_CLIENT_SECRET}" > $CATALINA_HOME/webapps/draw/WEB-INF/msgraph_client_secret
+
+    if [[ "${DRAWIO_MSGRAPH_TENANT_ID}" ]]; then
+        echo "window.DRAWIO_MSGRAPH_TENANT_ID = '${DRAWIO_MSGRAPH_TENANT_ID}'; " >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+    fi
 fi
 
 #Gitlab
@@ -164,6 +170,13 @@ if [ -f $CATALINA_HOME/.keystore ] && [ -z $VAR ]; then
         -i "/Server/Service/${UUID}" -t 'attr' -n 'sslProtocol' -v 'TLS' \
         -i "/Server/Service/${UUID}" -t 'attr' -n 'KeystoreFile' -v "$CATALINA_HOME/.keystore" \
         -i "/Server/Service/${UUID}" -t 'attr' -n 'KeystorePass' -v "${KEY_PASS}" \
+        -i "/Server/Service/${UUID}" -t 'attr' -n 'defaultSSLHostConfigName' -v "${PUBLIC_DNS:-'draw.example.com'}" \
+        -s "/Server/Service/${UUID}" -t 'elem' -n 'SSLHostConfig' \
+        -i "/Server/Service/${UUID}/SSLHostConfig" -t 'attr' -n 'hostName' -v "${PUBLIC_DNS:-'draw.example.com'}" \
+        -i "/Server/Service/${UUID}/SSLHostConfig" -t 'attr' -n 'protocols' -v 'TLSv1.2' \
+        -s "/Server/Service/${UUID}/SSLHostConfig" -t 'elem' -n 'Certificate' \
+        -i "/Server/Service/${UUID}/SSLHostConfig/Certificate" -t 'attr' -n 'certificateKeystoreFile' -v "$CATALINA_HOME/.keystore" \
+        -i "/Server/Service/${UUID}/SSLHostConfig/Certificate" -t 'attr' -n 'certificateKeystorePassword' -v "${KEY_PASS}" \
         -r "/Server/Service/${UUID}" -v 'Connector' \
     conf/server.xml
 fi

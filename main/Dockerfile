@@ -17,11 +17,15 @@ FROM tomcat:9-jre11
 
 LABEL maintainer="JGraph Ltd"
 
+ENV RUN_USER            tomcat
+ENV RUN_GROUP           tomcat
+
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
         certbot \
         curl \
-        xmlstarlet && \
+        xmlstarlet \
+        unzip && \
     apt-get autoremove -y --purge && \
     apt-get clean && \
     rm -r /var/lib/apt/lists/*
@@ -43,7 +47,12 @@ RUN mkdir -p $CATALINA_HOME/webapps/draw && \
 
 # Copy docker-entrypoint
 COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod 755 /docker-entrypoint.sh
+# Add a tomcat user
+RUN groupadd -r ${RUN_GROUP} && useradd -g ${RUN_GROUP} -d ${CATALINA_HOME} -s /bin/bash ${RUN_USER} && \
+    chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}
+
+USER ${RUN_USER}
 
 WORKDIR $CATALINA_HOME
 

@@ -12,7 +12,8 @@ You can customize the application by setting the following environment variables
 
 * `DRAWIO_BASE_URL`: Your deployment base URL. For example, `https://drawio.example.com` or `https://www.example.com/drawio` if it is deployed into a folder.
 * `DRAWIO_CSP_HEADER`: (Optional) Your website Content-Security-Policy if you want to customize it.
-* `DRAWIO_VIEWER_URL`: (Optional) If you want to host a draw.io viewer also, set the viewer URL
+* `DRAWIO_VIEWER_URL`: (Optional) If you want to host a draw.io viewer also, set the viewer URL. For example, `https://drawio.example.com/js/viewer.min.js`
+* `DRAWIO_LIGHTBOX_URL`: (Optional) If you want to host a draw.io viewer also, set the lightbox URL. For example, `https://drawio.example.com` 
 * `DRAWIO_CONFIG`: (Optional) draw.io configuration JSON. [Documentation](https://desk.draw.io/support/solutions/articles/16000058316)
 
 ## Google Drive
@@ -33,8 +34,7 @@ Once you registered your application, from Microsoft Azure UI, select your new a
 
 In "Advanced settings" on the same page, enable "Access tokens" and "ID tokens" check boxes. To get the "Client secret", select "Certificates & secrets" page from the menu, then click "+ New client secret" button. Finally, from the "Overview" page in the menu, you can find the "Application (client) ID". 
 
-Set the client ID and secret into environment variables `DRAWIO_MSGRAPH_CLIENT_ID` and `DRAWIO_MSGRAPH_CLIENT_SECRET`.
-
+Set the client ID and secret into environment variables `DRAWIO_MSGRAPH_CLIENT_ID` and `DRAWIO_MSGRAPH_CLIENT_SECRET`. If your Azure app is a single tenant, set `DRAWIO_MSGRAPH_TENANT_ID` to your tenant ID.
 ## Gitlab
 
 Set the following environment variables to enable Gitlab integration.
