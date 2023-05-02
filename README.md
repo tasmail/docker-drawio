@@ -65,7 +65,7 @@ If you're running `Docker Toolbox` then start a web browser session to <http://1
 `docker run -it -m1g -e LETS_ENCRYPT_ENABLED=true -e PUBLIC_DNS=drawio.example.com --rm --name="draw" -p 80:80 -p 443:8443 jgraph/drawio`
 Notice that mapping port 80 to container's port 80 allows certbot to work in stand-alone mode. Mapping port 443 to container's port 8443 allows the container tomcat to serve https requests directly.
 
-## Changing diagrams.net configuration
+## Changing draw.io configuration
 
 ### Method 1 (Build you custom image with setting pre-loaded)
 
