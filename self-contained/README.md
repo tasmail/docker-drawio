@@ -15,6 +15,7 @@ You can customize the application by setting the following environment variables
 * `DRAWIO_VIEWER_URL`: (Optional) If you want to host a draw.io viewer also, set the viewer URL. For example, `https://drawio.example.com/js/viewer.min.js`
 * `DRAWIO_LIGHTBOX_URL`: (Optional) If you want to host a draw.io viewer also, set the lightbox URL. For example, `https://drawio.example.com` 
 * `DRAWIO_CONFIG`: (Optional) draw.io configuration JSON. [Documentation](https://desk.draw.io/support/solutions/articles/16000058316)
+* `DRAWIO_USE_HTTP`: (Optional and INSECURE) If your setup uses http only and you understand the risks (for example, sending OAuth tokens over http), set `DRAWIO_USE_HTTP=1`. **Caution: Use at your own risk**.
 
 ## Google Drive
 
