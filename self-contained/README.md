@@ -38,11 +38,12 @@ In "Advanced settings" on the same page, enable "Access tokens" and "ID tokens" 
 Set the client ID and secret into environment variables `DRAWIO_MSGRAPH_CLIENT_ID` and `DRAWIO_MSGRAPH_CLIENT_SECRET`. If your Azure app is a single tenant, set `DRAWIO_MSGRAPH_TENANT_ID` to your tenant ID.
 ## Gitlab
 
-Set the following environment variables to enable Gitlab integration.
+Create a new OAuth app (Settings -> Applications). Set "Redirect URI" (e.g, `https://drawio.example.com/gitlab`) and "Scopes" (e.g, `api`, `read_repository
+`, `write_repository`). Then, set the following environment variables, using information from the app, to enable Gitlab integration.
 
 * `DRAWIO_GITLAB_ID`: Your Gitlab ID
 * `DRAWIO_GITLAB_SECRET`: Your Gitlab Secret
-* `DRAWIO_GITLAB_URL`: Your Gitlab URL
+* `DRAWIO_GITLAB_URL`: Your Gitlab URL, for example, `https://gitlab.com/oauth/token` when the gitlab.com is used
 
 ## EMF Converter
 
