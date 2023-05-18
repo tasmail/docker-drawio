@@ -136,7 +136,9 @@ if ! [ -f $CATALINA_HOME/.keystore ] && [ "$LETS_ENCRYPT_ENABLED" == "true" ]; t
 
     keytool -certreq -alias tomcat -file request.csr -keystore $CATALINA_HOME/.keystore -storepass "${KEYSTORE_PASS}"
 
-    certbot certonly --csr $CATALINA_HOME/request.csr --standalone --register-unsafely-without-email --agree-tos
+    mkdir -p $CATALINA_HOME/letsencrypt/conf $CATALINA_HOME/letsencrypt/work $CATALINA_HOME/letsencrypt/logs
+
+    certbot certonly --csr $CATALINA_HOME/request.csr --standalone --register-unsafely-without-email --agree-tos --config-dir $CATALINA_HOME/letsencrypt/conf --work-dir $CATALINA_HOME/letsencrypt/work --logs-dir $CATALINA_HOME/letsencrypt/logs
 
     keytool -import -trustcacerts -alias tomcat -file 0001_chain.pem -keystore $CATALINA_HOME/.keystore -storepass "${KEYSTORE_PASS}"
 fi
