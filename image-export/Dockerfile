@@ -7,17 +7,18 @@ ENV RUN_GROUP           drawio
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
-        git curl software-properties-common chromium libatk-bridge2.0-0 libgtk-3-0 && \
+        git curl software-properties-common chromium libatk-bridge2.0-0 libgtk-3-0 wget && \
     apt-add-repository contrib && \
     apt-get update -y && \
-    apt-get install -y --no-install-recommends \
-        ttf-mscorefonts-installer && \
+    wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
+    apt install -y --no-install-recommends \
+        ./ttf-mscorefonts-installer_3.8_all.deb && \
     mkdir /usr/local/drawio && \
     cd /usr/local/drawio && \
     git clone https://github.com/jgraph/draw-image-export2.git && \
     cd draw-image-export2 && \
     npm install && \
-    apt-get remove -y --purge chromium git
+    apt-get remove -y --purge chromium git wget
     
 # Add drawio user
 RUN groupadd -r ${RUN_GROUP} && useradd -g ${RUN_GROUP} -d /usr/local/drawio -s /bin/bash ${RUN_USER} && \
