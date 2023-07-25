@@ -1,6 +1,9 @@
 FROM node:lts-slim
 
-LABEL maintainer="JGraph Ltd"
+LABEL maintainer="JGraph Ltd" \
+      org.opencontainers.image.authors="JGraph Ltd" \
+      org.opencontainers.image.url="https://www.drawio.com" \
+      org.opencontainers.image.source="https://github.com/jgraph/docker-drawio"
 
 ENV RUN_USER            drawio
 ENV RUN_GROUP           drawio
