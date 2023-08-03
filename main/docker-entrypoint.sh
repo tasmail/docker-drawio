@@ -26,6 +26,8 @@ echo "})();" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 if [[ "${DRAWIO_SELF_CONTAINED}" ]]; then
     echo "window.EXPORT_URL = '/service/0'; //This points to ExportProxyServlet which uses the local export server at port 8000. This proxy configuration allows https requests to the export server via Tomcat." >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
     echo "window.PLANT_URL = '/service/1';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+elif [[ "${EXPORT_URL}" ]]; then
+    echo "window.EXPORT_URL = '/service/0';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 fi
 #DRAWIO_BASE_URL is path to base of deployment, e.g. https://www.example.com/folder
 echo "window.DRAWIO_BASE_URL = '${DRAWIO_BASE_URL:-http://localhost:8080}';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js

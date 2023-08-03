@@ -15,6 +15,7 @@ You can customize the application by setting the following environment variables
 * `DRAWIO_VIEWER_URL`: (Optional) If you want to host a draw.io viewer also, set the viewer URL. For example, `https://drawio.example.com/js/viewer.min.js`
 * `DRAWIO_LIGHTBOX_URL`: (Optional) If you want to host a draw.io viewer also, set the lightbox URL. For example, `https://drawio.example.com` 
 * `DRAWIO_CONFIG`: (Optional) draw.io configuration JSON. [Documentation](https://desk.draw.io/support/solutions/articles/16000058316)
+* `DRAWIO_USE_HTTP`: (Optional and INSECURE) If your setup uses http only and you understand the risks (for example, sending OAuth tokens over http), set `DRAWIO_USE_HTTP=1`. **Caution: Use at your own risk**.
 
 ## Google Drive
 
@@ -37,11 +38,12 @@ In "Advanced settings" on the same page, enable "Access tokens" and "ID tokens" 
 Set the client ID and secret into environment variables `DRAWIO_MSGRAPH_CLIENT_ID` and `DRAWIO_MSGRAPH_CLIENT_SECRET`. If your Azure app is a single tenant, set `DRAWIO_MSGRAPH_TENANT_ID` to your tenant ID.
 ## Gitlab
 
-Set the following environment variables to enable Gitlab integration.
+Create a new OAuth app (Settings -> Applications). Set "Redirect URI" (e.g, `https://drawio.example.com/gitlab`) and "Scopes" (e.g, `api`, `read_repository
+`, `write_repository`). Then, set the following environment variables, using information from the app, to enable Gitlab integration.
 
 * `DRAWIO_GITLAB_ID`: Your Gitlab ID
 * `DRAWIO_GITLAB_SECRET`: Your Gitlab Secret
-* `DRAWIO_GITLAB_URL`: Your Gitlab URL
+* `DRAWIO_GITLAB_URL`: Your Gitlab URL, for example, `https://gitlab.com/oauth/token` when the gitlab.com is used
 
 ## EMF Converter
 
