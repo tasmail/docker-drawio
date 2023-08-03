@@ -34,7 +34,7 @@ echo "window.DRAWIO_VIEWER_URL = '${DRAWIO_VIEWER_URL}';" >> $CATALINA_HOME/weba
 #DRAWIO_LIGHTBOX_URL Replace with your lightbox URL, eg. https://www.example.com
 echo "window.DRAWIO_LIGHTBOX_URL = '${DRAWIO_LIGHTBOX_URL}';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 echo "window.DRAW_MATH_URL = 'math/es5';" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
-#Custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
+#Custom draw.io configurations. For more details, https://www.drawio.com/doc/faq/configure-diagram-editor
 echo "window.DRAWIO_CONFIG = ${DRAWIO_CONFIG:-null};" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 #Real-time configuration
 if [[ "${DRAWIO_IOT_ENDPOINT}" ]]; then
