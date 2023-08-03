@@ -7,4 +7,4 @@ window.EXPORT_URL = '/service/0'; //This points to ExportProxyServlet which uses
 							   //This proxy configuration allows https requests to the export server via Tomcat.
 window.PLANT_URL = '/service/1';
 window.DRAW_MATH_URL = 'math';
-window.DRAWIO_CONFIG = null; //Replace with your custom draw.io configurations. For more details, https://www.drawio.com/doc/faq/configure-diagram-editor
+window.DRAWIO_CONFIG = null; //Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316

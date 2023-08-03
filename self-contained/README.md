@@ -14,7 +14,7 @@ You can customize the application by setting the following environment variables
 * `DRAWIO_CSP_HEADER`: (Optional) Your website Content-Security-Policy if you want to customize it.
 * `DRAWIO_VIEWER_URL`: (Optional) If you want to host a draw.io viewer also, set the viewer URL. For example, `https://drawio.example.com/js/viewer.min.js`
 * `DRAWIO_LIGHTBOX_URL`: (Optional) If you want to host a draw.io viewer also, set the lightbox URL. For example, `https://drawio.example.com` 
-* `DRAWIO_CONFIG`: (Optional) draw.io configuration JSON. [Documentation](https://www.drawio.com/doc/faq/configure-diagram-editor)
+* `DRAWIO_CONFIG`: (Optional) draw.io configuration JSON. [Documentation](https://desk.draw.io/support/solutions/articles/16000058316)
 
 ## Google Drive
 

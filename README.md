@@ -4,7 +4,7 @@
 
 ## Introduction
 
-[draw.io](https://github.com/jgraph/drawio) is a whiteboarding / diagramming software application. This project contains various docker implementations of draw.io and associated tools:
+[draw.io](https://github.com/jgraph/drawio) is an open source whiteboarding / diagramming software application. This project contains various docker implementations of draw.io and associated tools:
 
 * draw.io docker image that is always up-to-date with draw.io releases
 * draw.io export server image which allow exporting draw.io diagrams to pdf and images
