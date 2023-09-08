@@ -1,35 +1,35 @@
 FROM node:lts-slim
 
-LABEL maintainer="JGraph Ltd" \
-      org.opencontainers.image.authors="JGraph Ltd" \
-      org.opencontainers.image.url="https://www.drawio.com" \
-      org.opencontainers.image.source="https://github.com/jgraph/docker-drawio"
+LABEL maintainer="JGraph Ltd"
 
-ENV RUN_USER            drawio
-ENV RUN_GROUP           drawio
+# We don't need the standalone Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends \
-        git curl software-properties-common chromium libatk-bridge2.0-0 libgtk-3-0 wget && \
-    apt-add-repository contrib && \
-    apt-get update -y && \
-    wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
-    apt install -y --no-install-recommends \
-        ./ttf-mscorefonts-installer_3.8_all.deb && \
-    mkdir /usr/local/drawio && \
-    cd /usr/local/drawio && \
-    git clone https://github.com/jgraph/draw-image-export2.git && \
-    cd draw-image-export2 && \
-    npm install && \
-    apt-get remove -y --purge chromium git wget
-    
-# Add drawio user
-RUN groupadd -r ${RUN_GROUP} && useradd -g ${RUN_GROUP} -d /usr/local/drawio -s /bin/bash ${RUN_USER} && \
-    chown -R ${RUN_USER}:${RUN_GROUP} /usr/local/drawio
+# From https://github.com/puppeteer/puppeteer/blob/main/docker/Dockerfile
+# Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
+# Note: this installs the necessary libs to make the bundled version of Chrome that Puppeteer
+# installs, work.
+RUN apt-get update \
+    && apt-get install -y wget gnupg git \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
+    && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 \
+        --no-install-recommends \
+    && wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb \
+    && apt install -y --no-install-recommends \
+        ./ttf-mscorefonts-installer_3.8_all.deb \
+    && groupadd -r pptruser && useradd -rm -g pptruser -G audio,video pptruser \
+    && cd /home/pptruser \
+    && git clone https://github.com/jgraph/draw-image-export2.git \
+    && cd draw-image-export2 \
+    && npm install \
+    && apt-get remove -y --purge git wget \
+    && rm -rf /var/lib/apt/lists/*
 
-USER ${RUN_USER}
+USER pptruser
 
-WORKDIR /usr/local/drawio/draw-image-export2
+WORKDIR /home/pptruser/draw-image-export2
 
 EXPOSE 8000
 
