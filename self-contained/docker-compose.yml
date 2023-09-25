@@ -17,7 +17,7 @@ services:
     volumes:
       - fonts_volume:/usr/share/fonts/drawio
     environment:
-      - DRAWIO_SERVER_URL=${DRAWIO_BASE_URL}
+      - DRAWIO_BASE_URL=${DRAWIO_BASE_URL}
   drawio:
     image: jgraph/drawio
     ports:
@@ -36,6 +36,7 @@ services:
       - PLANTUML_URL=http://plantuml-server:8080/
       - EXPORT_URL=http://image-export:8000/
       - DRAWIO_BASE_URL=${DRAWIO_BASE_URL}
+      - DRAWIO_SERVER_URL=${DRAWIO_SERVER_URL}
       - DRAWIO_CSP_HEADER=${DRAWIO_CSP_HEADER}
       - DRAWIO_VIEWER_URL=${DRAWIO_VIEWER_URL}
       - DRAWIO_LIGHTBOX_URL=${DRAWIO_LIGHTBOX_URL}
