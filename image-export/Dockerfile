@@ -14,22 +14,26 @@ RUN apt-get update \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
     && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
-    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 dbus dbus-x11 \
         --no-install-recommends \
+    && service dbus start \
     && wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb \
     && apt install -y --no-install-recommends \
         ./ttf-mscorefonts-installer_3.8_all.deb \
     && groupadd -r pptruser && useradd -rm -g pptruser -G audio,video pptruser \
     && cd /home/pptruser \
     && git clone https://github.com/jgraph/draw-image-export2.git \
-    && cd draw-image-export2 \
-    && npm install \
+    && chown -R pptruser:pptruser /home/pptruser \
     && apt-get remove -y --purge git wget \
     && rm -rf /var/lib/apt/lists/*
 
 USER pptruser
 
+ENV DBUS_SESSION_BUS_ADDRESS autolaunch:
+
 WORKDIR /home/pptruser/draw-image-export2
+
+RUN npm install
 
 EXPOSE 8000
 
