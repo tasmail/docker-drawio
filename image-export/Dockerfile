@@ -20,6 +20,7 @@ RUN apt-get update \
     && wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb \
     && apt install -y --no-install-recommends \
         ./ttf-mscorefonts-installer_3.8_all.deb \
+    && apt install -y --no-install-recommends minizip \
     && groupadd -r pptruser && useradd -rm -g pptruser -G audio,video pptruser \
     && cd /home/pptruser \
     && git clone https://github.com/jgraph/draw-image-export2.git \
