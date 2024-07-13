@@ -1,5 +1,34 @@
 version: '3'
 services:
+  proxy:
+    image: jwilder/nginx-proxy:alpine
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
+    container_name: nginx-proxy
+    networks:
+      - nginx_proxy_network
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - nginx_etc_volume:/etc/nginx:rw
+      - nginx_html_volume:/usr/share/nginx/html:rw
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: unless-stopped
+  
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-nginx-proxy-companion
+    depends_on:
+      - proxy
+    networks:
+      - nginx_proxy_network
+    volumes:
+      - nginx_etc_volume:/etc/nginx:rw
+      - nginx_html_volume:/usr/share/nginx/html:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+  
   plantuml-server:
     image: plantuml/plantuml-server
     expose:
@@ -8,6 +37,7 @@ services:
       - drawionet
     volumes:
       - fonts_volume:/usr/share/fonts/drawio
+  
   image-export:
     image: jgraph/export-server
     expose:
@@ -18,18 +48,19 @@ services:
       - fonts_volume:/usr/share/fonts/drawio
     environment:
       - DRAWIO_BASE_URL=${DRAWIO_BASE_URL}
+  
   drawio:
     image: jgraph/drawio
-    ports:
-      - "8443:8443"
-      - "8080:8080"
     links:
       - plantuml-server:plantuml-server
       - image-export:image-export
     depends_on:
+      - letsencrypt
+      - proxy
       - plantuml-server
       - image-export
     networks:
+      - nginx_proxy_network
       - drawionet
     environment:
       - DRAWIO_SELF_CONTAINED=1
@@ -54,8 +85,25 @@ services:
       - DRAWIO_GITLAB_SECRET=${DRAWIO_GITLAB_SECRET}
       - DRAWIO_GITLAB_URL=${DRAWIO_GITLAB_URL}
       - DRAWIO_CLOUD_CONVERT_APIKEY=${DRAWIO_CLOUD_CONVERT_APIKEY}
+      - VIRTUAL_HOST=${DRAWIO_VIRTUAL_HOST}
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=${DRAWIO_VIRTUAL_HOST}
+      - LETSENCRYPT_EMAIL=${DRAWIO_LETSENCRYPT_EMAIL}
 networks:
+  nginx_proxy_network:
   drawionet:
 
 volumes:
+  nginx_etc_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /etc/nginx
+  nginx_html_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /usr/share/nginx/html
   fonts_volume:
